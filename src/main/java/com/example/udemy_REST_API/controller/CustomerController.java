@@ -5,8 +5,10 @@ import com.example.udemy_REST_API.mapper.CustomerMapper;
 import com.example.udemy_REST_API.model.Customer;
 import com.example.udemy_REST_API.request.CustomerCreateRequest;
 import com.example.udemy_REST_API.response.CustomerResponse;
+import com.example.udemy_REST_API.response.ListResponse;
 import com.example.udemy_REST_API.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +39,10 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CustomerResponse>> getCustomers(){
-        List<Customer> customers = customerService.getAllCustomers();
-        List<CustomerResponse> response = customerMapper.mapToListResponse(customers);
+    public ResponseEntity<ListResponse<CustomerResponse>> getCustomers(Integer page, Integer size){
+        Page<Customer> pageCustomers = customerService.getAllCustomers(page, size);
+        List<CustomerResponse> list = customerMapper.mapToListResponse(pageCustomers.toList());
+        ListResponse<CustomerResponse> response = new ListResponse<>(list, pageCustomers.stream().count());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

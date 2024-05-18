@@ -4,6 +4,8 @@ import com.example.udemy_REST_API.exeception.CustomerServiceException;
 import com.example.udemy_REST_API.model.Customer;
 import com.example.udemy_REST_API.reposetory.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public class CustomerService {
         return customerRepository.findById(id).orElseThrow(CustomerServiceException::new);
     }
 
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public Page<Customer> getAllCustomers(Integer page, Integer size) {
+        return customerRepository.findAll(PageRequest.of(page, size));
     }
 }
