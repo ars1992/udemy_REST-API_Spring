@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/customers")
@@ -31,6 +33,13 @@ public class CustomerController {
     public ResponseEntity<CustomerResponse> getCustomerId(@PathVariable String id){
         Customer customer = customerService.getCustomerById(id);
         CustomerResponse response = customerMapper.mapToResponse(customer);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CustomerResponse>> getCustomers(){
+        List<Customer> customers = customerService.getAllCustomers();
+        List<CustomerResponse> response = customerMapper.mapToListResponse(customers);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

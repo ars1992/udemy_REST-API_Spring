@@ -6,6 +6,7 @@ import com.example.udemy_REST_API.reposetory.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -20,5 +21,9 @@ public class CustomerService {
 
     public Customer getCustomerById(String id) {
         return customerRepository.findById(id).orElseThrow(CustomerServiceException::new);
+    }
+
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
     }
 }
