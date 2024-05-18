@@ -30,9 +30,23 @@ public class CustomerService {
     }
 
     public Customer updateCustomer(String id, Customer customer) {
-        Customer oldCustomer = getCustomerById(id);
+        Customer oldCustomer = this.getCustomerById(id);
         customer.setId(oldCustomer.getId());
         customer.setEmail(oldCustomer.getEmail());
         return customerRepository.save(customer);
+    }
+
+    public Customer updatePartCustomer(String id, Customer customer) {
+        Customer oldCustomer = this.getCustomerById(id);
+
+        if (customer.getFirstname() != null && ! customer.getFirstname().isBlank()){
+            oldCustomer.setFirstname(customer.getFirstname());
+        }
+
+        if (customer.getLastname() != null && ! customer.getLastname().isBlank()){
+            oldCustomer.setLastname(customer.getLastname());
+        }
+
+        return oldCustomer;
     }
 }
