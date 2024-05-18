@@ -28,4 +28,11 @@ public class CustomerService {
     public Page<Customer> getAllCustomers(Integer page, Integer size) {
         return customerRepository.findAll(PageRequest.of(page, size));
     }
+
+    public Customer updateCustomer(String id, Customer customer) {
+        Customer oldCustomer = getCustomerById(id);
+        customer.setId(oldCustomer.getId());
+        customer.setEmail(oldCustomer.getEmail());
+        return customerRepository.save(customer);
+    }
 }

@@ -4,6 +4,7 @@ package com.example.udemy_REST_API.controller;
 import com.example.udemy_REST_API.mapper.CustomerMapper;
 import com.example.udemy_REST_API.model.Customer;
 import com.example.udemy_REST_API.request.CustomerCreateRequest;
+import com.example.udemy_REST_API.request.CustomerUpdateRequest;
 import com.example.udemy_REST_API.response.CustomerResponse;
 import com.example.udemy_REST_API.response.ListResponse;
 import com.example.udemy_REST_API.service.CustomerService;
@@ -43,6 +44,14 @@ public class CustomerController {
         Page<Customer> pageCustomers = customerService.getAllCustomers(page, size);
         List<CustomerResponse> list = customerMapper.mapToListResponse(pageCustomers.toList());
         ListResponse<CustomerResponse> response = new ListResponse<>(list, pageCustomers.stream().count());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable String id, @RequestBody CustomerUpdateRequest request){
+        Customer customer = customerMapper.mapToModel(request);
+        Customer updatedCustomer = customerService.updateCustomer(id, customer);
+        CustomerResponse response = customerMapper.mapToResponse(updatedCustomer);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
