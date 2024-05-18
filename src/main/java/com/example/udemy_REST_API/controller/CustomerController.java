@@ -9,6 +9,7 @@ import com.example.udemy_REST_API.request.CustomerUpdateRequest;
 import com.example.udemy_REST_API.response.CustomerResponse;
 import com.example.udemy_REST_API.response.ListResponse;
 import com.example.udemy_REST_API.service.CustomerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class CustomerController {
     private final CustomerMapper customerMapper;
 
     @PostMapping
-    public ResponseEntity<CustomerResponse> createCustomer(@RequestBody CustomerCreateRequest request){
+    public ResponseEntity<CustomerResponse> createCustomer(@RequestBody @Valid CustomerCreateRequest request){
         Customer customer = customerMapper.mapToModel(request);
         Customer createdCustomer = customerService.createCustomer(customer);
         CustomerResponse customerResponse = customerMapper.mapToResponse(createdCustomer);
