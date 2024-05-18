@@ -9,10 +9,7 @@ import com.example.udemy_REST_API.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,5 +25,12 @@ public class CustomerController {
         Customer createdCustomer = customerService.createCustomer(customer);
         CustomerResponse customerResponse = customerMapper.mapToResponse(createdCustomer);
         return new ResponseEntity<>(customerResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponse> getCustomerId(@PathVariable String id){
+        Customer customer = customerService.getCustomerById(id);
+        CustomerResponse response = customerMapper.mapToResponse(customer);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

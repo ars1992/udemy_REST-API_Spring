@@ -1,5 +1,6 @@
 package com.example.udemy_REST_API.service;
 
+import com.example.udemy_REST_API.exeception.CustomerServiceException;
 import com.example.udemy_REST_API.model.Customer;
 import com.example.udemy_REST_API.reposetory.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +16,9 @@ public class CustomerService {
     public Customer createCustomer(Customer customer) {
         customer.setId(UUID.randomUUID().toString());
         return customerRepository.save(customer);
+    }
+
+    public Customer getCustomerById(String id) {
+        return customerRepository.findById(id).orElseThrow(CustomerServiceException::new);
     }
 }
