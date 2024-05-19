@@ -2,13 +2,12 @@ package com.example.udemy_REST_API.exeception;
 
 
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import com.example.udemy_REST_API.response.ErrorResponse;
+import org.springframework.http.*;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -32,4 +31,23 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList());
         return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
+
+    @ExceptionHandler(CustomerServiceException.class)
+    public ResponseEntity<Object> handleCustomerServiceException(CustomerServiceException ex, WebRequest request){
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ErrorResponse errorResponse = new ErrorResponse("INTERNAL_SERVER_ERROR", ErrorCode.DEFAULT_ERROR);
+
+        if (ex.getERROR_CODE() == ErrorCode.CUSTOMER_NOT_FOUND){
+            errorResponse = new ErrorResponse(ex.getMessage(), ex.getERROR_CODE());
+            status = HttpStatus.NOT_FOUND;
+        }
+
+        if (ex.getERROR_CODE() == ErrorCode.EMAIL_EXISTS){
+            errorResponse = new ErrorResponse(ex.getMessage(), ex.getERROR_CODE());
+            status = HttpStatus.BAD_REQUEST;
+        }
+
+        return handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+    }
 }
+

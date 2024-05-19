@@ -50,7 +50,7 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable String id, @RequestBody CustomerUpdateRequest request){
+    public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable String id, @RequestBody @Valid CustomerUpdateRequest request){
         Customer customer = customerMapper.mapToModel(request);
         Customer updatedCustomer = customerService.updateCustomer(id, customer);
         CustomerResponse response = customerMapper.mapToResponse(updatedCustomer);
@@ -58,7 +58,7 @@ public class CustomerController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CustomerResponse> updatePartCustomer(@PathVariable String id, @RequestBody CustomerPartUpdateRequest request){
+    public ResponseEntity<CustomerResponse> updatePartCustomer(@PathVariable String id, @RequestBody @Valid CustomerPartUpdateRequest request){
         Customer customer = customerMapper.mapToModel(request);
         Customer updatedCustomer = customerService.updatePartCustomer(id, customer);
         CustomerResponse response = customerMapper.mapToResponse(updatedCustomer);

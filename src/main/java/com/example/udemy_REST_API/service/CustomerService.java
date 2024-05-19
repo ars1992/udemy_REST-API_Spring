@@ -1,6 +1,7 @@
 package com.example.udemy_REST_API.service;
 
 import com.example.udemy_REST_API.exeception.CustomerServiceException;
+import com.example.udemy_REST_API.exeception.ErrorCode;
 import com.example.udemy_REST_API.model.Customer;
 import com.example.udemy_REST_API.reposetory.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,23 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     public Customer createCustomer(Customer customer) {
+        customerRepository.findByEmail(customer.getEmail()).orElseThrow(
+                () -> new CustomerServiceException(
+                        ErrorCode.EMAIL_EXISTS,
+                        "Kunde mit der Email %s ist bereits vorhanden".formatted(customer.getEmail())
+                )
+        );
         customer.setId(UUID.randomUUID().toString());
         return customerRepository.save(customer);
     }
 
     public Customer getCustomerById(String id) {
-        return customerRepository.findById(id).orElseThrow(CustomerServiceException::new);
+        return customerRepository.findById(id).orElseThrow(
+                () -> new CustomerServiceException(
+                ErrorCode.CUSTOMER_NOT_FOUND,
+                "Kunde mit der id %s wurde nicht gefunden".formatted(id)
+                )
+        );
     }
 
     public Page<Customer> getAllCustomers(Integer page, Integer size) {
