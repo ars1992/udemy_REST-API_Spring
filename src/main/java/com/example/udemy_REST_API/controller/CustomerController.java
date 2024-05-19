@@ -7,8 +7,14 @@ import com.example.udemy_REST_API.request.CustomerCreateRequest;
 import com.example.udemy_REST_API.request.CustomerPartUpdateRequest;
 import com.example.udemy_REST_API.request.CustomerUpdateRequest;
 import com.example.udemy_REST_API.response.CustomerResponse;
+import com.example.udemy_REST_API.response.ErrorResponse;
 import com.example.udemy_REST_API.response.ListResponse;
 import com.example.udemy_REST_API.service.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +40,15 @@ public class CustomerController {
         return new ResponseEntity<>(customerResponse, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get a customer by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found the customer",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CustomerResponse.class)) }),
+            @ApiResponse(responseCode = "404", description = "Found no customer",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)) })
+    })
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResponse> getCustomerId(@PathVariable String id){
         Customer customer = customerService.getCustomerById(id);
